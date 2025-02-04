@@ -1,6 +1,6 @@
 [
     {
-        "latin_name": "Debris",
+        "latin_name": "Debrisaaa",
         "common_name": "Debris",
         "has_button": true,
         "hotkey": "d"
@@ -10,12 +10,6 @@
         "common_name": "Buchanka",
         "has_button": true,
         "hotkey": "c"
-    },
-    {
-        "latin_name": "Rotifera",
-        "common_name": "Virnik",
-        "has_button": true,
-        "hotkey": "r"
     },
     {
         "latin_name": "Bosmina",
@@ -64,5 +58,11 @@
         "common_name": "a",
         "has_button": false,
         "hotkey": null
+    },
+    {
+        "latin_name": "Rotifera",
+        "common_name": "Virnik",
+        "has_button": true,
+        "hotkey": "a"
     }
 ]

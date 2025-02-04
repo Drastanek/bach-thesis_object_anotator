@@ -46,12 +46,16 @@ def parse_image_name(image_path):
 
 
 def copy_images_to_process(directory):
+    i = 0
     for root, dirs, files in os.walk(directory):
         for file in files:
             if file.endswith('.jpg'):
                 path = os.path.join(root, file)
                 dest = os.path.join(globalVariables.INPUT_PROCESS_DIR, file)
                 shutil.copy(path, dest)
+                i += 1
+                print(f"Copied image: {path} to {dest}")
+    print(f"Images copied: {i}")
 
 
 def save_image_micro_object(image):
@@ -98,9 +102,11 @@ def remove_image(image_path):
 
 
 def read_images_in_input_dir():
+    i = 0
     for root, dirs, files in os.walk(globalVariables.INPUT_PROCESS_DIR):
         for file in files:
             if file.endswith('.jpg'):
                 path = os.path.join(root, file)
                 globalVariables.image_paths.append(path)
-                print(f"Added image: {path}")
+                i += 1
+    print(f"Images found: {i}")

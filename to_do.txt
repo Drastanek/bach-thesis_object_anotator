@@ -1,13 +1,2 @@
-allow editing of microobjects
-
-re-creatnout hotkey list ?
-
-add history list to the side of a window
-
-fileControl.load_from(image_path)
-	function to load image from last processed path
-	path to be stored across new sessions
-	- storing progress of the user
-
-TODO - copy the images into project folder and delete them from this folder
-	- ask user about the file location only when project folder is empty
+history has to have scrollable list
+editing view has to have scrollable list

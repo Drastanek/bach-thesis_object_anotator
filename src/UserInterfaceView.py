@@ -169,15 +169,15 @@ class UserInterfaceView:
         micro_objects = MicroObject.get_all_instances()
         for micro_object in micro_objects:
             tk.Label(self.edit_frame, text=f"{micro_object.get_latin_name()} ({micro_object.get_common_name()})").pack()
-            tk.Button(self.edit_frame, text="Edit", command=lambda mo=micro_object: self.edit_micro_object(mo)).pack()
+            tk.Button(self.edit_frame, text="Edit",
+                      command=lambda mo=micro_object: self.controller.edit_micro_object(mo)).pack()
             tk.Button(self.edit_frame, text="Delete",
-                      command=lambda mo=micro_object: self.delete_micro_object(mo)).pack()
+                      command=lambda mo=micro_object: self.controller.delete_micro_object(mo)).pack()
 
     def close_edit_micro_object_window(self):
         self.edit_window.destroy()
 
     def show_edit_micro_object_window(self, micro_object):
-
         self.edit_micro_object_window = tk.Toplevel(self.root)
         self.edit_micro_object_window.title("Edit MicroObject")
 
@@ -202,10 +202,32 @@ class UserInterfaceView:
         else:
             self.hotkey_combobox.set('None')
 
-        # Submit button
+        # Save button
         tk.Button(self.edit_micro_object_window, text="Save",
                   command=lambda: self.controller.save_edited_micro_object(micro_object)).grid(row=4, column=0,
-                                                                                               columnspan=2, pady=10)
+                                                                                               columnspan=2,
+                                                                                               pady=10)
+
+    def get_edit_class_data(self):
+        latin_name = self.latin_name_entry.get()
+        common_name = self.common_name_entry.get()
+        has_button = self.has_button_var.get()
+        hotkey = self.hotkey_var.get()
+        self.edit_micro_object_window.destroy()
+        return latin_name, common_name, has_button, hotkey
+
+    def recreate_edit_selection_box(self):
+        # Clear existing selection box
+        for widget in self.edit_frame.winfo_children():
+            widget.destroy()
+
+        micro_objects = MicroObject.get_all_instances()
+        for micro_object in micro_objects:
+            tk.Label(self.edit_frame, text=f"{micro_object.get_latin_name()} ({micro_object.get_common_name()})").pack()
+            tk.Button(self.edit_frame, text="Edit",
+                      command=lambda mo=micro_object: self.controller.edit_micro_object(mo)).pack()
+            tk.Button(self.edit_frame, text="Delete",
+                      command=lambda mo=micro_object: self.controller.delete_micro_object(mo)).pack()
 
     #####################################################################################
 
@@ -260,6 +282,12 @@ class UserInterfaceView:
         for micro_object in micro_objects:
             if micro_object.get_has_button():
                 self.add_micro_object_button(micro_object)
+
+    def unbind_hotkeys(self):
+        # Unbind all old key bindings
+        for micro_object in MicroObject.get_all_instances():
+            if micro_object.get_hotkey():
+                self.root.unbind(micro_object.get_hotkey().lower())
 
     def add_micro_object_button(self, micro_object):
         button = tk.Button(self.object_button_frame,

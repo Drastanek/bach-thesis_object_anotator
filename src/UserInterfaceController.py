@@ -82,10 +82,20 @@ class MicroObjectController:
         self.view.show_edit_micro_object_window(micro_object)
 
     def save_edited_micro_object(self, micro_object):
+        appearance = micro_object.get_appearance()
+        latin_name, common_name, has_button, hotkey = self.view.get_edit_class_data()
+        if not has_button:
+            hotkey = None
+
+        self.view.unbind_hotkeys()
+        self.delete_micro_object(micro_object)
+        MicroObject(latin_name, common_name, appearance, has_button, hotkey)
+
+        self.view.edit_micro_object_window.destroy()
         self.recalculation()
-        self.view.close_edit_micro_object_window()
 
     def delete_micro_object(self, micro_object):
+        self.view.unbind_hotkeys()
         MicroObject.instances.remove(micro_object)
         self.recalculation()
         self.view.close_edit_micro_object_window()
@@ -95,3 +105,5 @@ class MicroObjectController:
         recalculate_hotkey_list()
         self.view.recreate_buttons()
         self.view.recreate_selection_box()
+        if self.view.edit_window is not None:
+            self.view.recreate_edit_selection_box()
