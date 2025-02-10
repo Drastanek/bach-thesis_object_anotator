@@ -1,8 +1,8 @@
 import json
 import os
 import shutil
-import pyexiv2
 import cv2 as cv
+import piexif
 from src.Image import Image
 from datetime import datetime
 
@@ -17,8 +17,10 @@ def save_object_classes_to_json(object_classes, filename):
 
 def load_object_classes_from_json(filename):
     with open(filename, 'r') as file:
+        if os.stat(filename).st_size == 0:
+            return
         data = json.load(file)
-        object_instances = [MicroObject.MicroObject(**obj) for obj in data]
+        object_instances = [MicroObject.MicroObject(**obj, from_json=True) for obj in data]
         return object_instances
 
 
@@ -69,32 +71,36 @@ def save_image_micro_object(image):
 
 
 def add_metadata_to_file(path, classification, old_meta_data):
-    with pyexiv2.Image(path) as img:
-        metadata = img.read_exif()
-
-        # Update the UserComment tag with additional classification data
-        user_comment = old_meta_data.get('Exif.Photo.UserComment', '{}')
-        user_comment_data = json.loads(user_comment)
-        user_comment_data['human_classification_classified'] = True
-        user_comment_data['human_classification_class'] = classification.get_latin_name()
-        user_comment_data['human_classification_time'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        # add meta for user that classified the image
-        metadata['Exif.Photo.UserComment'] = json.dumps(user_comment_data)
-
-        # Write the updated metadata back to the image
-        img.modify_exif(metadata)
+    exif_dict = piexif.load(path)
+    user_comment = old_meta_data.get('Exif.Photo.UserComment', '{}')
+    user_comment_data = json.loads(user_comment)
+    user_comment_data['human_classification_classified'] = True
+    user_comment_data['human_classification_class'] = classification.get_latin_name()
+    user_comment_data['human_classification_time'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    exif_dict['Exif'][piexif.ExifIFD.UserComment] = json.dumps(user_comment_data).encode('utf-8')
+    exif_bytes = piexif.dump(exif_dict)
+    piexif.insert(exif_bytes, path)
 
 
 def read_old_meta_data(image):
-    with pyexiv2.Image(image.get_original_path()) as img:
-        metadata = img.read_exif()
-        return metadata
+    exif_dict = piexif.load(image.get_original_path())
+    metadata = {}
+    if piexif.ExifIFD.UserComment in exif_dict['Exif']:
+        metadata['Exif.Photo.UserComment'] = exif_dict['Exif'][piexif.ExifIFD.UserComment].decode('utf-8')
+    return metadata
 
 
 def check_path(path):
     if not os.path.exists(path):
         os.makedirs(path)
         print(f"Created directory: {path}")
+
+
+def check_file(path):
+    if not os.path.isfile(path):
+        with open(path, 'w') as file:
+            pass
+        print(f"Created file: {path}")
 
 
 def remove_image(image_path):
@@ -110,3 +116,10 @@ def read_images_in_input_dir():
                 globalVariables.image_paths.append(path)
                 i += 1
     print(f"Images found: {i}")
+
+
+def save_to_write_only_json(obj):
+    with open(globalVariables.WRITE_ONLY_MICRO_OBJECTS_JSON, 'a') as file:
+        json.dump(obj.to_dict(), file, indent=4)
+        file.write('\n')
+        print(f"Saved: {obj}")

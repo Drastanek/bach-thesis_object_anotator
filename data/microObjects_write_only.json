@@ -1,0 +1,90 @@
+{
+    "latin_name": "Kal a necistoty",
+    "common_name": "debree",
+    "has_button": true,
+    "hotkey": "x"
+}
+{
+    "latin_name": "Kal a necistoty",
+    "common_name": "Debree",
+    "has_button": true,
+    "hotkey": "x"
+}
+{
+    "latin_name": "Nerozpoznatelne\u00e9",
+    "common_name": "Undetectable",
+    "has_button": true,
+    "hotkey": "y"
+}
+{
+    "latin_name": "Copepode",
+    "common_name": "Buchanka",
+    "has_button": true,
+    "hotkey": "c"
+}
+{
+    "latin_name": "Debree",
+    "common_name": "Kal a necistoty",
+    "has_button": true,
+    "hotkey": "x"
+}
+{
+    "latin_name": "Undetectable",
+    "common_name": "Nerozpoznateln\u00e9",
+    "has_button": true,
+    "hotkey": "y"
+}
+{
+    "latin_name": "Tlacitko_Latin",
+    "common_name": "Tlacitko_Common",
+    "has_button": true,
+    "hotkey": "None"
+}
+{
+    "latin_name": "Tlacitko_Latin",
+    "common_name": "Tlacitko_Common",
+    "has_button": false,
+    "hotkey": null
+}
+{
+    "latin_name": "Tlacitko_Latin",
+    "common_name": "Tlacitko_Common",
+    "has_button": true,
+    "hotkey": "a"
+}
+{
+    "latin_name": "List_1_Latin",
+    "common_name": "List_1_Common",
+    "has_button": false,
+    "hotkey": null
+}
+{
+    "latin_name": "List_2",
+    "common_name": "List_2",
+    "has_button": false,
+    "hotkey": null
+}
+{
+    "latin_name": "List_3",
+    "common_name": "List_3",
+    "has_button": false,
+    "hotkey": null
+}
+{
+    "latin_name": "sdsfs",
+    "common_name": "sdfsd",
+    "has_button": true,
+    "hotkey": "None"
+}
+{
+    "latin_name": "sdsfs",
+    "common_name": "sdfsd",
+    "has_button": false,
+    "hotkey": null
+}
+{
+    "latin_name": "awesgvb",
+    "common_name": "sdfgh",
+    "has_button": true,
+    "hotkey": "None"
+}

@@ -1,2 +1,0 @@
-history has to have scrollable list
-editing view has to have scrollable list

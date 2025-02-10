@@ -4,8 +4,7 @@ from src.UserInterfaceController import MicroObjectController
 from src import MicroObject
 import src.fileControl as fileControl
 import src.globalVariables as globalVariables
-from src.fileControl import check_path
-
+from src.fileControl import check_path, check_file
 
 def setup_ui():
     root = tk.Tk()
@@ -20,6 +19,8 @@ def main():
     check_path(globalVariables.DATA_DIR)
     check_path(globalVariables.OUTPUT_DIR)
     check_path(globalVariables.INPUT_PROCESS_DIR)
+    check_file(globalVariables.MICRO_OBJECTS_JSON)
+    check_file(globalVariables.WRITE_ONLY_MICRO_OBJECTS_JSON)
     fileControl.load_object_classes_from_json(globalVariables.MICRO_OBJECTS_JSON)
 
     setup_ui()

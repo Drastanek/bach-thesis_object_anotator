@@ -1,5 +1,3 @@
-
-
 class MicroObject:
     latin_name = ""
     common_name = ""
@@ -9,7 +7,7 @@ class MicroObject:
 
     instances = []
 
-    def __init__(self, latin_name, common_name, appearance=0, has_button=False, hotkey=None):
+    def __init__(self, latin_name, common_name, appearance=0, has_button=False, hotkey=None, from_json=False):
         self.latin_name = latin_name
         self.common_name = common_name
         self.appearance = appearance

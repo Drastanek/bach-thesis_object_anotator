@@ -1,68 +1,26 @@
 [
     {
-        "latin_name": "Debrisaaa",
-        "common_name": "Debris",
-        "has_button": true,
-        "hotkey": "d"
-    },
-    {
-        "latin_name": "Cyclopoida",
+        "latin_name": "Copepode",
         "common_name": "Buchanka",
         "has_button": true,
         "hotkey": "c"
     },
     {
-        "latin_name": "Bosmina",
-        "common_name": "Nosaticka",
+        "latin_name": "Debree",
+        "common_name": "Kal a necistoty",
         "has_button": true,
-        "hotkey": "b"
+        "hotkey": "x"
     },
     {
-        "latin_name": "Nauplius",
-        "common_name": "Nauplius",
+        "latin_name": "Undetectable",
+        "common_name": "Nerozpoznateln\u00e9",
         "has_button": true,
-        "hotkey": "n"
+        "hotkey": "y"
     },
     {
-        "latin_name": "b",
-        "common_name": "bb",
+        "latin_name": "awesgvb",
+        "common_name": "sdfgh",
         "has_button": true,
-        "hotkey": null
-    },
-    {
-        "latin_name": "Unidentifiable",
-        "common_name": "Nerozpoznatelne",
-        "has_button": true,
-        "hotkey": null
-    },
-    {
-        "latin_name": "test",
-        "common_name": "testG",
-        "has_button": true,
-        "hotkey": "g"
-    },
-    {
-        "latin_name": "test",
-        "common_name": "testNotJ",
-        "has_button": false,
-        "hotkey": null
-    },
-    {
-        "latin_name": "a",
-        "common_name": "aaa",
-        "has_button": true,
-        "hotkey": "7"
-    },
-    {
-        "latin_name": "srdtfvb",
-        "common_name": "a",
-        "has_button": false,
-        "hotkey": null
-    },
-    {
-        "latin_name": "Rotifera",
-        "common_name": "Virnik",
-        "has_button": true,
-        "hotkey": "a"
+        "hotkey": "None"
     }
 ]

@@ -2,6 +2,7 @@ import os
 
 DATA_DIR = 'data'
 MICRO_OBJECTS_JSON = os.path.join(DATA_DIR, 'microObjects.json')
+WRITE_ONLY_MICRO_OBJECTS_JSON = os.path.join(DATA_DIR, 'microObjects_write_only.json')
 OUTPUT_DIR = 'output'
 INPUT_PROCESS_DIR = os.path.join(DATA_DIR, 'images_to_process')
 

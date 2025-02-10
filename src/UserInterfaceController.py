@@ -33,6 +33,7 @@ class MicroObjectController:
         if not has_button:
             hotkey = None
         new_micro_object = MicroObject(latin_name, common_name, 0, has_button, hotkey)
+        fileControl.save_to_write_only_json(new_micro_object)
         print(f"Created: {new_micro_object}")
         self.recalculation()
 
@@ -89,7 +90,8 @@ class MicroObjectController:
 
         self.view.unbind_hotkeys()
         self.delete_micro_object(micro_object)
-        MicroObject(latin_name, common_name, appearance, has_button, hotkey)
+        edited = MicroObject(latin_name, common_name, appearance, has_button, hotkey)
+        fileControl.save_to_write_only_json(edited)
 
         self.view.edit_micro_object_window.destroy()
         self.recalculation()
@@ -98,7 +100,6 @@ class MicroObjectController:
         self.view.unbind_hotkeys()
         MicroObject.instances.remove(micro_object)
         self.recalculation()
-        self.view.close_edit_micro_object_window()
 
     def recalculation(self):
         self.recalculate_dict()
