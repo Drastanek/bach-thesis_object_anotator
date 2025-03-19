@@ -3,32 +3,39 @@ from tkinter import ttk, filedialog
 from PIL import ImageTk
 from PIL import Image as PILImage
 import platform
+from typing import Tuple
 
 import src.globalVariables as globalVariables
 from src.MicroObject import MicroObject
 
 
 class UserInterfaceView:
-    button_grid_column = 0
-    button_grid_row = 0
+    """
+    Class to handle the user interface of the MicroObject Viewer.
+    """
+    button_grid_column: int = 0 # column for the button grid
+    button_grid_row: int = 0 # row for the button grid
 
-    user_name = "Not_specified"
+    user_name: str = "Not_specified"
 
-    def __init__(self, root, controller):
-        self.edit_window = None
-        self.edit_frame = None
-        self.edit_micro_object_window = None
-        self.image_label = None
-        self.photo = None
-        self.selection_box = None
-        self.hotkey_combobox = None
-        self.hotkey_var = None
-        self.has_button_var = None
-        self.common_name_entry = None
-        self.latin_name_entry = None
-        self.new_window = None
-        self.history_listbox = None
-        self.history_frame = None
+    def __init__(self, root: tk.Tk, controller) -> None:
+        """
+        Initialize the UserInterfaceView with the main Tkinter root and controller.
+        """
+        self.edit_window: tk.Toplevel = None
+        self.edit_frame: tk.Frame = None
+        self.edit_micro_object_window: tk.Toplevel = None
+        self.image_label: tk.Label = None
+        self.photo: ImageTk.PhotoImage = None
+        self.selection_box: ttk.Combobox = None
+        self.hotkey_combobox: ttk.Combobox = None
+        self.hotkey_var: tk.StringVar = None
+        self.has_button_var: tk.BooleanVar = None
+        self.common_name_entry: tk.Entry = None
+        self.latin_name_entry: tk.Entry = None
+        self.new_window: tk.Toplevel = None
+        self.history_listbox: tk.Listbox = None
+        self.history_frame: tk.Frame = None
         self.controller = controller
         self.root = root
         self.root.title("MicroObject Viewer")
@@ -61,9 +68,9 @@ class UserInterfaceView:
         self.control_button_frame = tk.Frame(self.control_frame, bg='black')
         self.control_button_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
-        # create buttons
-        self.recreate_buttons()
-        self.recreate_selection_box()
+        # create buttons and selection box
+        self.recreate_buttons([])
+        self.recreate_selection_box([])
 
         # skip button
         self.button_skip = tk.Button(self.control_button_frame, text="Skip\n(→)",
@@ -72,13 +79,17 @@ class UserInterfaceView:
         self.root.bind('<KeyRelease-Right>', lambda event: self.controller.next_image())
 
         # edit microObjects button
-        self.button_edit_class = tk.Button(self.control_button_frame, text="Edit Class",
-                                           command=self.controller.edit_micro_objects, width=20, height=2)
+        self.button_edit_class = tk.Button(self.control_button_frame, 
+                                           text="Edit Class",
+                                           command=self.controller.edit_micro_objects,
+                                           width=20, height=2)
         self.button_edit_class.pack(pady=5)
 
         # new MicroObjects
-        self.button_add_class = tk.Button(self.control_button_frame, text="Add Class",
-                                          command=self.controller.add_micro_object, width=20, height=2)
+        self.button_add_class = tk.Button(self.control_button_frame,
+                                          text="Add Class",
+                                          command=self.controller.add_micro_object, 
+                                          width=20, height=2)
         self.button_add_class.pack(pady=5)
 
         # frame for the history pane
@@ -86,7 +97,8 @@ class UserInterfaceView:
         self.history_frame.pack(side=tk.LEFT, fill=tk.Y, padx=10, pady=10)
 
         # listbox for the history log
-        self.history_listbox = tk.Listbox(self.history_frame, bg='white', fg='black', width=50, height=30)
+        self.history_listbox = tk.Listbox(self.history_frame, bg='white',
+                                           fg='black', width=50, height=30)
         self.history_listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
         # scrollbar for the history listbox
@@ -95,10 +107,13 @@ class UserInterfaceView:
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         self.history_listbox.config(yscrollcommand=scrollbar.set)
 
-    ############################################################################################################
+# Create MicroObjects --------------------------------------------------------------------------------
 
-    def show_new_micro_object_window(self):
-        def toggle_hotkey_combobox():
+    def show_new_micro_object_window(self) -> None:
+        """
+        Display a window to create a new MicroObject.
+        """
+        def toggle_hotkey_combobox() -> None:
             if self.has_button_var.get():
                 self.hotkey_combobox.config(state='readonly')
             else:
@@ -137,8 +152,11 @@ class UserInterfaceView:
                                                                     columnspan=2, 
                                                                     pady=10)
 
-    def has_button_checkbox(self):
-        def toggle_hotkey_combobox():
+    def has_button_checkbox(self) -> None:
+        """
+        Create a checkbox for 'Has Button' and a combobox for hotkey selection.
+        """
+        def toggle_hotkey_combobox() -> None:
             if self.has_button_var.get():
                 self.hotkey_combobox.config(state='readonly')
             else:
@@ -155,9 +173,10 @@ class UserInterfaceView:
         self.hotkey_combobox['values'] = ['None'] + globalVariables.available_hotkeys
         self.hotkey_combobox.grid(row=3, column=1, padx=10, pady=5)
 
-    ###############################################################################################
-
-    def get_new_class_data(self):
+    def get_new_class_data(self) -> Tuple[str, str, bool, str]:
+        """
+        Retrieve data for a newly created MicroObject class.
+        """
         latin_name = self.latin_name_entry.get()
         common_name = self.common_name_entry.get()
         has_button = self.has_button_var.get()
@@ -165,9 +184,12 @@ class UserInterfaceView:
         self.new_window.destroy()
         return latin_name, common_name, has_button, hotkey
 
-    ###############################################################################################
+# Edit MicroObjects --------------------------------------------------------------------------------
 
-    def show_edit_micro_objects_window(self):
+    def show_edit_micro_objects_window(self) -> None:
+        """
+        Display a window to edit existing MicroObjects.
+        """
         self.edit_window = tk.Toplevel(self.root)
         self.edit_window.title("Edit MicroObjects")
         self.edit_window.geometry("600x600")
@@ -180,11 +202,9 @@ class UserInterfaceView:
         self.scrollbar = tk.Scrollbar(self.edit_window, orient="vertical", command=self.canvas.yview)
         self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
-        # Configure the canvas
+        # Configure the canvas to be scrollable
         self.canvas.configure(yscrollcommand=self.scrollbar.set)
         self.canvas.bind('<Configure>', lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
-
-        # Bind mouse wheel to scroll
         self.canvas.bind_all("<MouseWheel>", lambda event: self.canvas.yview_scroll(int(-1*(event.delta/120)), "units"))
 
         # Create a frame inside the canvas
@@ -196,6 +216,7 @@ class UserInterfaceView:
         tk.Label(self.edit_frame, text="Latin Name", font=('Arial', 12, 'bold')).grid(row=0, column=1, padx=10, pady=5)
         tk.Label(self.edit_frame, text="Actions", font=('Arial', 12, 'bold')).grid(row=0, column=2, padx=10, pady=5)
 
+        # Create a control items and button for each MicroObject
         micro_objects = MicroObject.get_all_instances()
         for i, micro_object in enumerate(micro_objects, start=1):
             tk.Label(self.edit_frame, text=micro_object.get_common_name()).grid(row=i, column=0, padx=10, pady=5)
@@ -205,10 +226,16 @@ class UserInterfaceView:
             tk.Button(self.edit_frame, text="Delete", fg='red',
                       command=lambda mo=micro_object: self.controller.delete_micro_object(mo)).grid(row=i, column=3, padx=5, pady=5)
 
-    def close_edit_micro_objects_window(self):
+    def close_edit_micro_objects_window(self) -> None:
+        """
+        Close the edit MicroObjects window.
+        """
         self.edit_window.destroy()
 
-    def show_edit_micro_object_window(self, micro_object):
+    def show_edit_micro_object_window(self, micro_object: MicroObject) -> None:
+        """
+        Display a window to edit a specific MicroObject.
+        """
         self.edit_micro_object_window = tk.Toplevel(self.root)
         self.edit_micro_object_window.title("Edit MicroObject")
 
@@ -239,7 +266,10 @@ class UserInterfaceView:
                                                                                                columnspan=2,
                                                                                                pady=10)
 
-    def get_edit_class_data(self):
+    def get_edit_class_data(self) -> Tuple[str, str, bool, str]:
+        """
+        Retrieve data for editing a MicroObject class.
+        """
         latin_name = self.latin_name_entry.get()
         common_name = self.common_name_entry.get()
         has_button = self.has_button_var.get()
@@ -247,15 +277,28 @@ class UserInterfaceView:
         self.edit_micro_object_window.destroy()
         return latin_name, common_name, has_button, hotkey
 
-    def recreate_edit_selection_box(self):
+    def recreate_edit_selection_box(self) -> None:
+        """
+        Recreate the selection box in the edit window.
+        Used for updating after modifying MicroObjects. (eg. deleting)
+        """
         # Clear existing selection box
         self.edit_window.destroy()
 
         self.show_edit_micro_objects_window()
 
-    #####################################################################################
+# Image Handling main view --------------------------------------------------------------------------------
 
-    def update_image(self, image):
+# Image Handling main view - No images left ---------------------------------------------------------------
+    def update_image(self, image: PILImage) -> None:
+        """
+        Update the displayed image.
+        
+        param image: PILImage object to display
+        """
+
+        # Maximum dimensions for the displayed image
+        # - image will not overflow into the other elemetns
         MAX_WIDTH = 500
         MAX_HEIGHT = 500
 
@@ -273,15 +316,11 @@ class UserInterfaceView:
         self.image_label.configure(image=self.photo)
         self.image_label.image = self.photo
 
-    def ask_for_new_image_location(self):
-        new_image_path = filedialog.askdirectory(
-            title="Select Directory for New Images",
-            parent=self.root,
-            mustexist=True
-        )
-        return new_image_path
-
-    def show_no_images_left(self):
+    def show_no_images_left(self) -> None:
+        """
+        Display a message when no images are left.
+        Giving option to user, to select a new image location.
+        """
         # Clear the image frame
         for widget in self.image_frame.winfo_children():
             widget.destroy()
@@ -295,47 +334,83 @@ class UserInterfaceView:
                                   command=self.controller.find_new_images_form_dir, bg='black', fg='white')
         select_button.pack(pady=10)
 
-    def destroy_show_no_images_left(self):
+    def ask_for_new_image_location(self) -> str:
+        """
+        Ask the user to select a new directory for images.
+        Executed when no images are left in the globalVariables.INPUT_PROCESS_DIR.
+
+        return: path to the new image location
+        """
+        new_image_path = filedialog.askdirectory(
+            title="Select Directory for New Images",
+            parent=self.root,
+            mustexist=True
+        )
+        return new_image_path
+
+    def destroy_show_no_images_left(self) -> None:
+        """
+        Destroy the 'No images left' message and button.
+        """
         for widget in self.image_frame.winfo_children():
             widget.destroy()
 
-    def recreate_buttons(self):
+# Image Handling main view - Helping classes for managing the view --------------------------------------
+    def recreate_buttons(self, micro_objects_with_hotkeys: list[MicroObject]) -> None:
+        """
+        Recreate the buttons for MicroObjects.
+        Used to update the buttons after modifying MicroObjects. (eg. adding, deleting)
+        """
         # Clear existing buttons
         for widget in self.object_button_frame.winfo_children():
             widget.destroy()
 
         self.button_grid_column = 0
         self.button_grid_row = 0
-        micro_objects = MicroObject.get_all_instances()
-        for micro_object in micro_objects:
-            if micro_object.get_has_button():
-                self.add_micro_object_button(micro_object)
+        for micro_object in micro_objects_with_hotkeys:
+            self.add_micro_object_button(micro_object)
 
-    def unbind_hotkeys(self):
-        # Unbind all old key bindings
-        for micro_object in MicroObject.get_all_instances():
-            if micro_object.get_hotkey():
-                self.root.unbind(micro_object.get_hotkey().lower())
+    def unbind_hotkeys(self, micro_objects_with_hotkeys: list[MicroObject]) -> None:
+        """
+        Unbind all old key bindings.
+        Used to update the key bindings after modifying MicroObjects (eg. adding, deleting),
+        so the old bindings do not interfere with the new ones.
+        """
+        for micro_object in micro_objects_with_hotkeys:
+            self.root.unbind(micro_object.get_hotkey().lower())
 
-    def add_micro_object_button(self, micro_object):
+    def add_micro_object_button(self, micro_object: MicroObject) -> None:
+        """
+        Add a button for a MicroObject with has_button atribute.
+        """
+        # button text
         button_text = f"{micro_object.get_latin_name()}\n{micro_object.get_common_name()}"
         if micro_object.get_hotkey():
             button_text += f" ({micro_object.get_hotkey()})"
+        
+        # create the button with controller function assignment
         button = tk.Button(self.object_button_frame,
                            text=button_text,
                            command=lambda: self.controller.assign_classification(micro_object),
                            width=20, height=2)
+        
+        # bind hotkey to the button if required
         if micro_object.get_hotkey() and micro_object.get_hotkey().lower() != 'none':
             self.root.bind(f'<KeyRelease-{micro_object.get_hotkey().lower()}>',
                            lambda event, mo=micro_object: self.controller.assign_classification(mo))
+        
+        # place button into the view grid
         button.grid(row=self.button_grid_row, column=self.button_grid_column, pady=5)
-
         self.button_grid_row += 1
         if self.button_grid_row >= 5:
             self.button_grid_row = 0
             self.button_grid_column += 2
 
-    def recreate_selection_box(self):
+    def recreate_selection_box(self, micro_objects_without_hotkeys: list[MicroObject]) -> None:
+        """
+        Recreate the selection box for MicroObjects without has_button atribute.
+        Used to update the selection box after modifying MicroObjects. (eg. adding, deleting)
+        """
         # Clear existing selection box
         for widget in self.control_frame.winfo_children():
             if isinstance(widget, ttk.Combobox):
@@ -343,14 +418,11 @@ class UserInterfaceView:
             if isinstance(widget, tk.Button) and widget.cget('text') == "Confirm\n(Enter)":
                 widget.destroy()
 
-        micro_objects = MicroObject.get_all_instances()
-        self.controller.micro_object_dict = {micro_object.get_common_name(): micro_object for micro_object in
-                                             micro_objects if
-                                             not micro_object.get_has_button()}
-        values = list(self.controller.micro_object_dict.keys())
-        self.selection_box = ttk.Combobox(self.control_frame, values=values, width=20, height=2)
+        names = [micro_object.get_common_name() for micro_object in micro_objects_without_hotkeys]
+
+        self.selection_box = ttk.Combobox(self.control_frame, values=names, width=20, height=2)
         self.selection_box.pack(pady=5)
-        if values:
+        if names:
             self.selection_box.current(0)
 
         # confirm button
@@ -359,15 +431,19 @@ class UserInterfaceView:
         self.button_confirm.pack(pady=5)
         self.root.bind('<KeyRelease-Return>', lambda event: self.confirm_selection())
 
-    def confirm_selection(self):
+    def confirm_selection(self) -> None:
+        """
+        Confirm the selected MicroObject from the selection box.
+        """
         selected_common_name = self.selection_box.get()
         selected_micro_object = self.controller.micro_object_dict.get(selected_common_name)
         if selected_micro_object:
             self.controller.assign_classification(selected_micro_object)
 
-    ############################################################################################################
-
-    def update_history_log(self, image_name, classification, storage_path):
+    def update_history_log(self, image_name: str, classification: str, storage_path: str) -> None:
+        """
+        Update the history log with a new entry.
+        """
         log_entry = f"{image_name} - {classification} - {storage_path}"
         self.history_listbox.insert(0, log_entry)
 
