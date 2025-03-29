@@ -1,2 +1,0 @@
-přidat si při vytváření nového MicroObject objektu metodu, která uloží informace o objektu do write-only JSON soubru
-    - tím si zajistím, že budu mít množinu možných jmen na obrázcích - pokud se teda něco změní jen nepatrně, můžu sjednotit labels skrze stejné druhy

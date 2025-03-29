@@ -13,14 +13,11 @@ class MicroObjectController:
     micro_object_dict: Dict[str, MicroObject] = {}
 
     def __init__(self) -> None:
-        """
-        Initialize the MicroObjectController with no view.
-        """
         self.view = None
 
     def set_view(self, view: UserInterfaceView) -> None:
         """
-        Set the view for the controller and trigger recalculation.
+        Set the view for the controller and perform recalculation.
         """
         self.view = view
         self.recalculation()
@@ -34,6 +31,7 @@ class MicroObjectController:
     def create_micro_object(self) -> None:
         """
         Create a new micro object based on user input and save it.
+        Perform recalculation after creation.
         """
         latin_name, common_name, has_button, hotkey = self.view.get_new_class_data()
         if not has_button:
@@ -113,7 +111,7 @@ class MicroObjectController:
 
     def save_edited_micro_object(self, micro_object: MicroObject) -> None:
         """
-        Save the edited micro object and update the view.
+        Save the edited micro object and perform recalculation.
         """
         appearance = micro_object.get_appearance()
         latin_name, common_name, has_button, hotkey = self.view.get_edit_class_data()
@@ -129,14 +127,14 @@ class MicroObjectController:
 
     def delete_micro_object(self, micro_object: MicroObject) -> None:
         """
-        Delete a micro object and update the view.
+        Delete a micro object and perform recalculation.
         """
         MicroObject.instances.remove(micro_object)
         self.recalculation()
 
     def recalculation(self) -> None:
         """
-        Recalculate the micro object dictionary and update the view.
+        Recalculate the micro object dictionary, hotkeys and recreate control units.
         """
         self.recalculate_dict()
         self.recalculate_hotkey_list()

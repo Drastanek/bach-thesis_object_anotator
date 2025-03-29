@@ -11,7 +11,7 @@ from src.MicroObject import MicroObject
 
 class UserInterfaceView:
     """
-    Class to handle the user interface of the MicroObject Viewer.
+    Class to handle the user interface.
     """
     button_grid_column: int = 0 # column for the button grid
     button_grid_row: int = 0 # row for the button grid
@@ -72,7 +72,7 @@ class UserInterfaceView:
         self.recreate_buttons([])
         self.recreate_selection_box([])
 
-        # skip button
+        # skip button with arrow hotkey
         self.button_skip = tk.Button(self.control_button_frame, text="Skip\n(→)",
                                      command=self.controller.next_image, width=20, height=2)
         self.button_skip.pack(pady=5)
